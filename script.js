@@ -1,53 +1,83 @@
-//your JS code here. If required.
-document.addEventListener("DOMContentLoaded", function () {
-	const sound1 = document.getElementById("sound1");
-	const sound2 = document.getElementById("sound2");
-	const app = document.getElementById("app");
-	const playButton = document.querySelector(".circle .play");
+const videoElement = document.querySelector(".meditation-video");
+const audioElement = document.querySelector(".meditation-audio");
+const playButton = document.querySelector(".play");
+const timeDisplay = document.querySelector(".time-display");
+const app = document.querySelector(".app");
 
-	const music = document.getElementById("meditationAudio");
-	const video = document.getElementById("meditationVideo");
+let duration = 600; // default 10 minutes
+let isPlaying = false;
+let timer;
 
-	let currentMusic;
-	let currentVideo;
+const setTimer = (seconds) => {
+    let remainingTime = seconds;
+    clearInterval(timer);
 
-	sound1.addEventListener("click", function () {
+    timer = setInterval(() => {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-		if(currentMusic) currentMusic.pause();
-		if(currentVideo) currentVideo.pause();
+        if (remainingTime <= 0) {
+            clearInterval(timer);
+            videoElement.pause();
+            audioElement.pause();
+            playButton.textContent = "Play";
+            isPlaying = false;
+        }
 
-		currentMusic = music;
-		currentVideo = video;
-		currentMusic.src= "C:\\Users\\user\\Downloads\\mixkit-sea-waves-with-birds-loop-1185.wav";
-		currentVideo.src= "C:\\Users\\user\\Downloads\\stock-footage-phuket-thailand-tropical-beach-aerial-drone-top-down-view-bird-eye-view-of-sea-blue-waves-break-on.mp4";
+        remainingTime--;
+    }, 1000);
+};
 
-		currentMusic.play();
-		currentVideo.play();
-	});
+const togglePlay = () => {
+    if (isPlaying) {
+        videoElement.pause();
+        audioElement.pause();
+        clearInterval(timer);
+        playButton.textContent = "Play";
+    } else {
+        videoElement.play();
+        audioElement.play();
+        setTimer(duration);
+        playButton.textContent = "Pause";
+    }
+    isPlaying = !isPlaying;
+};
 
-	sound2.addEventListener("click", function () {
+// Set up event listeners for time selection
+document.getElementById("smaller-mins").addEventListener("click", () => {
+    duration = 120;
+    timeDisplay.textContent = "2:0";
+    clearInterval(timer);
+});
 
-		if(currentMusic) currentMusic.pause();
-		if(currentVideo) currentVideo.pause();
+document.getElementById("medium-mins").addEventListener("click", () => {
+    duration = 300;
+    timeDisplay.textContent = "5:0";
+    clearInterval(timer);
+});
 
-		currentMusic = music;
-		currentMusic = video;
+document.getElementById("long-mins").addEventListener("click", () => {
+    duration = 600;
+    timeDisplay.textContent = "10:0";
+    clearInterval(timer);
+});
 
-		currentMusic.src = "C:\\Users\\user\\Downloads\\LVBN9P3-sunrise-birds.mp3";
-		currentVideo.src = "C:\\Users\\user\\Downloads\\stock-footage--k-loop-rain-drops-falling-alpha-real-rain-high-quality-slow-rain-thunder-speedy-night.webm";
+// Sound switch functionality
+document.getElementById("beach-btn").addEventListener("click", () => {
+    clearInterval(timer);
+    togglePlay()
+    videoElement.src = "video/beach.mp4";
+    audioElement.src = "sounds/beach.mp3";
+});
 
-		currentMusic.play();
-		currentVideo.play();
-		
-	});
+document.getElementById("rain-btn").addEventListener("click", () => {
+    clearInterval(timer);
+    togglePlay()
+    
+    videoElement.src = "video/rain.mp4";
+    audioElement.src = "sounds/rain.mp3";
+});
 
-	playButton.addEventListener("click", function () {
-            if (currentVideo.paused && currentMusic.paused) {
-                currentVideo.play();
-				currentMusic.play();
-            } else {
-                currentVideo.pause();
-				currentMusic.pause();
-            }
-    });
-})
+// Play/Pause button
+playButton.addEventListener("click", togglePlay);
