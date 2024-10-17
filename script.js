@@ -1,78 +1,53 @@
 //your JS code here. If required.
-//your JS code here. If required.
-const app = document.getElementById('app');
-const videoContainer = document.querySelector('.vid-container');
-const video = document.getElementById('video');
-const audio = document.getElementById('audio');
-const soundButtons = document.querySelectorAll('.sound-picker button');
-const timeButtons = document.querySelectorAll('.time-select button');
-const timeDisplay = document.querySelector('.time-display');
-const playButton = document.querySelector('.play');
+document.addEventListener("DOMContentLoaded", function () {
+	const sound1 = document.getElementById("sound1");
+	const sound2 = document.getElementById("sound2");
+	const app = document.getElementById("app");
+	const playButton = document.querySelector(".circle .play");
 
-let currentTime = 10 * 60; // 10 minutes in seconds
-let isPlaying = false;
+	const music = document.getElementById("meditationAudio");
+	const video = document.getElementById("meditationVideo");
 
-function updateTimer() {
-  const minutes = Math.floor(currentTime / 60);
-  const seconds = currentTime % 60;
-  timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-}
+	let currentMusic;
+	let currentVideo;
 
-function startTimer(duration) {
-  currentTime = duration * 60;
-  updateTimer();
+	sound1.addEventListener("click", function () {
 
-  const timer = setInterval(() => {
-    currentTime--;
-    updateTimer();
+		if(currentMusic) currentMusic.pause();
+		if(currentVideo) currentVideo.pause();
 
-    if (currentTime <= 0) {
-      clearInterval(timer);
-      pauseMeditation();
-    }
-  }, 1000);
-}
+		currentMusic = music;
+		currentVideo = video;
+		currentMusic.src= "C:\\Users\\user\\Downloads\\mixkit-sea-waves-with-birds-loop-1185.wav";
+		currentVideo.src= "C:\\Users\\user\\Downloads\\stock-footage-phuket-thailand-tropical-beach-aerial-drone-top-down-view-bird-eye-view-of-sea-blue-waves-break-on.mp4";
 
-function pauseMeditation() {
-  isPlaying = false;
-  video.pause();
-  audio.pause();
-  playButton.textContent = 'Play';
-}
+		currentMusic.play();
+		currentVideo.play();
+	});
 
-function playMeditation() {
-  isPlaying = true;
-  video.play();
-  audio.play();
-  playButton.textContent = 'Pause';
-}
+	sound2.addEventListener("click", function () {
 
-soundButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const soundFile = button.id === 'sound1' ? 'beach.mp3' : 'rain.mp3';
-    audio.src = `sounds/${soundFile}`;
-	  audio.play();
+		if(currentMusic) currentMusic.pause();
+		if(currentVideo) currentVideo.pause();
 
-// Update the active button styling
-soundButtons.forEach(btn => btn.classList.remove('active'));
-button.classList.add('active');
-});
-});
+		currentMusic = music;
+		currentMusic = video;
 
-timeButtons.forEach(button => {
-button.addEventListener('click', () => {
-const time = button.id === 'smaller-mins' ? 2 : button.id === 'medium-mins' ? 5 : 10;
-startTimer(time);
-// Update the active button styling
-timeButtons.forEach(btn => btn.classList.remove('active'));
-button.classList.add('active');
-});
-});
+		currentMusic.src = "C:\\Users\\user\\Downloads\\LVBN9P3-sunrise-birds.mp3";
+		currentVideo.src = "C:\\Users\\user\\Downloads\\stock-footage--k-loop-rain-drops-falling-alpha-real-rain-high-quality-slow-rain-thunder-speedy-night.webm";
 
-playButton.addEventListener('click', () => {
-if (isPlaying) {
-pauseMeditation();
-} else {
-playMeditation();
-}
-});
+		currentMusic.play();
+		currentVideo.play();
+		
+	});
+
+	playButton.addEventListener("click", function () {
+            if (currentVideo.paused && currentMusic.paused) {
+                currentVideo.play();
+				currentMusic.play();
+            } else {
+                currentVideo.pause();
+				currentMusic.pause();
+            }
+    });
+})
